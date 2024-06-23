@@ -1,7 +1,7 @@
 # Video Subtitle Generator
 
 This project automatically generates and adds subtitles to a video file using Whisper for speech recognition and
-Qwen1.5_110B for translation.
+gpt-4 for translation.
 
 ## Setup
 
