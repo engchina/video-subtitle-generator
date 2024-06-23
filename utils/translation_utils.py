@@ -14,21 +14,21 @@ OPENAI_BASE_URL = os.environ["OPENAI_BASE_URL"]
 OPENAI_MODEL_NAME = os.environ["OPENAI_MODEL_NAME"]
 
 
-def translate_subtitles(input_srt, output_srt):
+def translate_subtitles(input_srt, output_srt, source_lang='zh', target_lang='en'):
     llm = ChatOpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL, model_name=OPENAI_MODEL_NAME, temperature=0)
 
     prompt = PromptTemplate(
-        input_variables=["text"],
+        input_variables=["source_lang", "target_lang", "text"],
         template="""
-            你是一名翻译专家，特别擅长将日文翻译成地道的中文表达，我将给出日文的语句，你直接输出对应的中文地道翻译。
+            你是一名翻译专家，特别擅长将{source_lang}翻译成地道的{target_lang}表达，我将给出{source_lang}的语句，你直接输出对应的{target_lang}地道翻译。
             不需要输出其他无关的语言。
             
-            日文的语句：
+            {source_lang}的语句：
             ```
             {text}
             ```
             
-            中文地道翻译:\n
+            {target_lang}地道翻译:\n
         """
     )
 
@@ -40,7 +40,8 @@ def translate_subtitles(input_srt, output_srt):
     translated_lines = []
     for line in tqdm(lines):
         if line.strip() and not line[0].isdigit() and "-->" not in line:
-            translated_text = chain.invoke(line.strip())
+            translated_text = chain.invoke(
+                input={"source_lang": source_lang, "target_lang": target_lang, "text": line.strip()})
             translated_lines.append(translated_text + "\n")
         else:
             translated_lines.append(line)

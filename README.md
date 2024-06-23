@@ -31,17 +31,66 @@ gpt-4 for translation.
 Run the script with:
 
 ```
-python main.py input_video.mp4 ./output/output_video.mp4 final_video.mp4 
+python main.py input_video.mp4 ./output/output_video.mp4 [options]
 ```
 
 Use the `--use-trim` flag to use 30 seconds instead of full video:
-Use the `--use-translation` flag to use translation instead of original language(default: from Japanese to Chinese):
+Use the `--use-translation` flag to use translation instead of original language:
+- `--source-lang`: Source language (default: Chinese)
+- `--target-lang`: Target language (default: English)
+- `--font-size`: Font size for subtitles (default: 18)
+- `--margin-v`: Vertical margin for subtitles (default: 2)
 
 ```
-python main.py input_video.mp4 ./output/output_video.mp4 --use-trim --use-translation
+python main.py input_video.mp4 ./output/output_video.mp4 --use-trim --use-translation --source-lang Chinese --target-lang English --font-size 20 --margin-v 4
+```
+
+If you want to generate both languages subtitles:
+
+```
+python main.py input_video.mp4 ./output/original_output.mp4 --font-size 18 --margin-v 2
+python main.py ./output/original_output.mp4 ./output/final_output.mp4 --use-translation --source-lang Japanese --target-lang English --font-size 18 --margin-v 22
 ```
 
 ## Others
+
+Install EPEL（Extra Packages for Enterprise Linux）
+
+```
+sudo dnf install -y oracle-epel-release-el8
+```
+
+Enable RPM Fusion
+
+```
+sudo dnf install -y https://download1.rpmfusion.org/free/el/rpmfusion-free-release-8.noarch.rpm
+sudo dnf install -y https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-8.noarch.rpm
+```
+
+Install dnf plugins
+
+```
+sudo dnf install -y dnf-plugins-core
+```
+
+Enable ol8_codeready_builder
+
+```
+sudo dnf config-manager --set-enabled ol8_codeready_builder
+```
+
+Install ffmpeg
+
+```
+sudo dnf install -y ffmpeg ffmpeg-devel
+```
+
+Install Google Noto Sans font
+
+```
+sudo dnf install -y google-noto-sans-cjk-ttc-fonts
+```
+
 
 Flush font cache
 
@@ -60,5 +109,4 @@ Use ffmpeg to set font
 ```
 ffmpeg -i input_video.mp4 -vf subtitles=subtitle.srt:force_style='FontName=SimSun' -c:v libx264 -c:a copy output_video.mp4
 ```
-
 

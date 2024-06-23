@@ -13,7 +13,7 @@ OPENAI_BASE_URL = os.environ["OPENAI_BASE_URL"]
 OPENAI_MODEL_NAME = os.environ["OPENAI_MODEL_NAME"]
 
 
-def main(input_video, output_video, use_trim=False, use_translation=False):
+def main(input_video, output_video, use_trim=False, use_translation=False, source_lang='zh', target_lang='en', font_size=18, margin_v=2):
     # Step 1: Prepare video
     trimmed_video = input_video
     if use_trim:
@@ -27,12 +27,12 @@ def main(input_video, output_video, use_trim=False, use_translation=False):
     if use_translation:
         # Step 3 & 4: Translate subtitles using gpt-4 via LangChain
         translated_srt = "output/translated_ast.srt"
-        translation_utils.translate_subtitles(srt_file, translated_srt)
+        translation_utils.translate_subtitles(srt_file, translated_srt, source_lang, target_lang)
     else:
         translated_srt = srt_file
 
     # Step 5: Add subtitles to video using FFmpeg
-    ffmpeg_utils.add_subtitles_to_video(trimmed_video, translated_srt, output_video)
+    ffmpeg_utils.add_subtitles_to_video(trimmed_video, translated_srt, output_video, font_size, margin_v)
 
     print(f"Video with subtitles generated: {output_video}")
 
@@ -44,6 +44,10 @@ if __name__ == "__main__":
     parser.add_argument("--use-trim", action="store_true", help="Use 30 seconds trimmed video instead of full video")
     parser.add_argument("--use-translation", action="store_true",
                         help="Use translation instead of original language")
+    parser.add_argument("--source-lang", default="zh", help="Source language (default: zh)")
+    parser.add_argument("--target-lang", default="en", help="Target language (default: en)")
+    parser.add_argument("--font-size", type=int, default=18, help="Font size for subtitles (default: 18)")
+    parser.add_argument("--margin-v", type=int, default=2, help="Vertical margin for subtitles (default: 2)")
     args = parser.parse_args()
 
-    main(args.input_video, args.output_video, args.use_trim, args.use_translation)
+    main(args.input_video, args.output_video, args.use_trim, args.use_translation, args.source_lang, args.target_lang, args.font_size, args.margin_v)
