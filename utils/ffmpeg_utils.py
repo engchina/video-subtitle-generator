@@ -17,7 +17,7 @@ def add_subtitles_to_video(input_video, subtitle_file, output_video):
     # MarginV=2：离底部的距离
     command = [
         "ffmpeg", "-i", input_video,
-        "-vf", f"subtitles={subtitle_file}:force_style='Alignment=2,MarginV=2'",
+        "-vf", f"subtitles={subtitle_file}:force_style='FontSize=18,Alignment=2,MarginV=2'",
         "-max_muxing_queue_size", "1024",
         "-c:a", "copy",
         output_video,
