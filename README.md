@@ -41,21 +41,21 @@ Use the `--use-translation` flag to use translation instead of original language
 python main.py input_video.mp4 ./output/output_video.mp4 --use-trim --use-translation
 ```
 
-## Other knowledge
+## Others
 
-刷新字体缓存
+Flush font cache
 
 ```
 fc-cache -f -v
 ```
 
-验证字体安装
+Verify font
 
 ```
 fc-list :lang=zh
 ```
 
-使用 ffmpeg 指定字体
+Use ffmpeg to set font
 
 ```
 ffmpeg -i input_video.mp4 -vf subtitles=subtitle.srt:force_style='FontName=SimSun' -c:v libx264 -c:a copy output_video.mp4
