@@ -7,7 +7,7 @@ gpt-4 for translation.
 
 1. Create a conda environment:
    ```
-   conda activate video-subtitle-generator
+   conda create -n video-subtitle-generator python=3.11 -y
    ```
 
 2. Activate the environment:
