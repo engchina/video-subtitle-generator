@@ -31,7 +31,7 @@ gpt-4 for translation.
 Run the script with:
 
 ```
-python main.py input_video.mp4 ./output/output_video.mp4 [options]
+python cli.py input_video.mp4 ./output/output_video.mp4 [options]
 ```
 
 Use the `--use-trim` flag to use 30 seconds instead of full video:
@@ -42,14 +42,14 @@ Use the `--use-translation` flag to use translation instead of original language
 - `--margin-v`: Vertical margin for subtitles (default: 2)
 
 ```
-python main.py input_video.mp4 ./output/output_video.mp4 --use-trim --use-translation --source-lang Chinese --target-lang English --font-size 20 --margin-v 4
+python cli.py input_video.mp4 ./output/output_video.mp4 --use-trim --use-translation --source-lang Chinese --target-lang English --font-size 20 --margin-v 4
 ```
 
 If you want to generate both languages subtitles:
 
 ```
-python main.py input_video.mp4 ./output/original_output.mp4 --font-size 18 --margin-v 2
-python main.py ./output/original_output.mp4 ./output/final_output.mp4 --use-translation --source-lang Japanese --target-lang English --font-size 18 --margin-v 22
+python cli.py input_video.mp4 ./output/original_output.mp4 --font-size 18 --margin-v 2
+python cli.py ./output/original_output.mp4 ./output/final_output.mp4 --use-translation --source-lang Japanese --target-lang English --font-size 18 --margin-v 22
 ```
 
 ## Others

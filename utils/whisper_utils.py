@@ -1,8 +1,8 @@
 import whisper
 
 
-def generate_subtitles(video_file, output_srt, translate=False):
-    model = whisper.load_model("large")
+def generate_subtitles(video_file, output_srt, translate=False, whisper_model="large"):
+    model = whisper.load_model(whisper_model)
     task = "translate" if translate else "transcribe"
     result = model.transcribe(video_file, task=task)
 
