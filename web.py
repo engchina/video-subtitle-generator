@@ -59,7 +59,7 @@ def generate(input_video, use_exist_srt, uploaded_srt, whisper_model, use_transl
 
 
 with gr.Blocks() as app:
-    gr.Markdown("# Generate Video Subtitles")
+    gr.Markdown("# Generate Multilingual Subtitles for Video")
     with gr.Row():
         with gr.Column():
             input_video = gr.Video(label="Input Video")
@@ -67,7 +67,7 @@ with gr.Blocks() as app:
             output_video = gr.Video(label="Output Video", show_download_button=True)
     with gr.Row():
         with gr.Column():
-            use_exist_srt_radio = gr.Radio(choices=[("Use exist srt file", True), ("Generate srt file by AI", False)],
+            use_exist_srt_radio = gr.Radio(choices=[("Generate srt file by AI", False), ("Use exist srt file", True)],
                                            value=False, show_label=False)
         with gr.Column():
             uploaded_srt_file = gr.File(label="srt File", type="filepath", file_types=[".srt"], interactive=False)
@@ -89,13 +89,13 @@ with gr.Blocks() as app:
         with gr.Column():
             font_size_slider = gr.Slider(label="Font Size", minimum=16, maximum=32, step=2, value=18)
         with gr.Column():
-            margin_v_slider = gr.Slider(label="Margin-V", minimum=0, maximum=80, step=2, value=4)
+            margin_v_slider = gr.Slider(label="Margin-V", minimum=0, maximum=80, step=2, value=8)
     with gr.Row():
         with gr.Column():
             merge_to_video_checkbox = gr.Checkbox(label="Merge to Video", show_label=True, value=False)
     with gr.Row():
         with gr.Column():
-            use_trim_checkbox = gr.Checkbox(label="Use Trim - Test 30 seconds firstly", show_label=True, value=True)
+            use_trim_checkbox = gr.Checkbox(label="Use Trim - Test first 30 seconds", show_label=True, value=True)
     with gr.Row():
         generate_btn = gr.Button("Generate", variant="primary")
     use_exist_srt_radio.change(
