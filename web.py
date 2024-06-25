@@ -23,21 +23,17 @@ def generate(input_video, use_exist_srt, uploaded_srt, whisper_model, use_transl
     video_uuid = uuid.uuid4()
 
     # Step 1: Prepare video
-    print(f"{type(input_video)=}")
     trimmed_video = input_video
     if use_trim:
         trimmed_video = f"/tmp/trimmed_{video_uuid}.mp4"
         ffmpeg_utils.trim_video(input_video, trimmed_video, duration=30)
-    print(f"{type(trimmed_video)=}")
 
     # Step 2: Generate subtitles using Whisper
     if use_exist_srt:
-        print(f"{uploaded_srt.name=}")
         srt_file = uploaded_srt.name
     else:
         srt_file = f"/tmp/generated_{video_uuid}.srt"
         whisper_utils.generate_subtitles(trimmed_video, srt_file, False, whisper_model)
-    print(f"{srt_file=}")
 
     if use_translation:
         # Step 3 & 4: Translate subtitles using gpt-4 via LangChain
@@ -45,7 +41,6 @@ def generate(input_video, use_exist_srt, uploaded_srt, whisper_model, use_transl
         translation_utils.translate_subtitles(srt_file, translated_srt, source_lang, target_lang)
     else:
         translated_srt = srt_file
-    print(f"{translated_srt=}")
 
     # Step 5: Add subtitles to video using FFmpeg
     if merge_to_video:
@@ -53,7 +48,6 @@ def generate(input_video, use_exist_srt, uploaded_srt, whisper_model, use_transl
         ffmpeg_utils.add_subtitles_to_video(trimmed_video, translated_srt, output_video, font_size, margin_v)
     else:
         output_video = trimmed_video
-    print(f"{type(output_video)=}")
     print(f"Video with subtitles generated: {output_video}")
     return gr.Video(value=output_video), gr.File(value=translated_srt)
 
