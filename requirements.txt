@@ -6,3 +6,5 @@ python-dotenv==1.0.1
 setuptools-rust==1.9.0
 tqdm==4.66.4
 gradio==4.36.1
+qwen-agent==0.0.5
+json5==0.9.25

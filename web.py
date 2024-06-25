@@ -16,10 +16,26 @@ OPENAI_BASE_URL = os.environ["OPENAI_BASE_URL"]
 OPENAI_MODEL_NAME = os.environ["OPENAI_MODEL_NAME"]
 
 
+def replace_in_file(file_path, replace_or_delete_list):
+    if replace_or_delete_list and len(replace_or_delete_list) > 1:
+        # 读取文件内容
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+
+        replace_or_delete_texts = replace_or_delete_list.split(",")
+        for replace_or_delete_text in replace_or_delete_texts:
+            key = replace_or_delete_text.split('=')[0]
+            value = replace_or_delete_text.split('=')[-1]
+            content = content.replace(key, "" if key == value else value)
+
+        # 将修改后的内容写回文件
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(content)
+
+
 def generate(input_video, use_exist_srt, uploaded_srt, whisper_model, use_translation, source_lang='Chinese',
              target_lang="English",
-             font_size=18, margin_v=4, merge_to_video=False,
-             use_trim=False):
+             font_size=18, margin_v=4, merge_to_video=False, use_trim=False, replace_list="", delete_list=""):
     video_uuid = uuid.uuid4()
 
     # Step 1: Prepare video
@@ -35,10 +51,15 @@ def generate(input_video, use_exist_srt, uploaded_srt, whisper_model, use_transl
         srt_file = f"/tmp/generated_{video_uuid}.srt"
         whisper_utils.generate_subtitles(trimmed_video, srt_file, False, whisper_model)
 
+    replace_in_file(srt_file, replace_list)
+    replace_in_file(srt_file, delete_list)
+
     if use_translation:
         # Step 3 & 4: Translate subtitles using gpt-4 via LangChain
         translated_srt = f"/tmp/translated_ast_{video_uuid}.srt"
         translation_utils.translate_subtitles(srt_file, translated_srt, source_lang, target_lang)
+        replace_in_file(translated_srt, replace_list)
+        replace_in_file(translated_srt, delete_list)
     else:
         translated_srt = srt_file
 
@@ -91,6 +112,11 @@ with gr.Blocks() as app:
         with gr.Column():
             use_trim_checkbox = gr.Checkbox(label="Use Trim - Test first 30 seconds", show_label=True, value=True)
     with gr.Row():
+        with gr.Column():
+            replace_list_text = gr.Textbox(label="Replace List", placeholder="foo=abc, bar=xyz")
+        with gr.Column():
+            delete_list_text = gr.Textbox(label="Delete List", placeholder="foo, bar")
+    with gr.Row():
         generate_btn = gr.Button("Generate", variant="primary")
     use_exist_srt_radio.change(
         lambda x: gr.File(interactive=True) if use_exist_srt_radio else gr.File(
@@ -99,7 +125,9 @@ with gr.Blocks() as app:
                        inputs=[input_video, use_exist_srt_radio, uploaded_srt_file, whisper_model_radio,
                                use_translation_checkbox,
                                source_lang_dropdown, target_lang_dropdown,
-                               font_size_slider, margin_v_slider, merge_to_video_checkbox, use_trim_checkbox],
+                               font_size_slider, margin_v_slider, merge_to_video_checkbox, use_trim_checkbox,
+                               replace_list_text,
+                               delete_list_text],
                        outputs=[output_video, uploaded_srt_file])
 
 if __name__ == "__main__":
