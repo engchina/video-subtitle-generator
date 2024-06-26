@@ -14,7 +14,7 @@ OPENAI_BASE_URL = os.environ["OPENAI_BASE_URL"]
 OPENAI_MODEL_NAME = os.environ["OPENAI_MODEL_NAME"]
 
 
-def translate_subtitles(input_srt, output_srt, source_lang='zh', target_lang='en'):
+def translate_subtitles(input_srt, output_srt, source_lang='Chinese', target_lang='English'):
     llm = ChatOpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL, model_name=OPENAI_MODEL_NAME, temperature=0)
 
     prompt = PromptTemplate(

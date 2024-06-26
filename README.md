@@ -25,8 +25,20 @@ gpt-4 for translation.
    ```
    python -c "import torch;print(torch.cuda.is_available());"
    ```
+   
 
-## Usage
+## Usage - UI
+
+Run the script with:
+
+```
+python web.py
+```
+
+Open your browser and access [http://localhost:7860](http://localhost:7860)
+
+
+## Usage - CLI
 
 Run the script with:
 

@@ -22,7 +22,7 @@ def replace_in_file(file_path, replace_or_delete_list):
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
 
-        replace_or_delete_texts = replace_or_delete_list.split(",")
+        replace_or_delete_texts = replace_or_delete_list.split("|")
         for replace_or_delete_text in replace_or_delete_texts:
             key = replace_or_delete_text.split('=')[0]
             value = replace_or_delete_text.split('=')[-1]
@@ -102,20 +102,20 @@ with gr.Blocks() as app:
                                                    value="English")
     with gr.Row():
         with gr.Column():
-            font_size_slider = gr.Slider(label="Font Size", minimum=16, maximum=32, step=2, value=18)
+            font_size_slider = gr.Slider(label="Font Size", minimum=16, maximum=32, step=2, value=24)
         with gr.Column():
-            margin_v_slider = gr.Slider(label="Margin-V", minimum=0, maximum=80, step=2, value=8)
+            margin_v_slider = gr.Slider(label="Margin-V", minimum=0, maximum=80, step=2, value=20)
     with gr.Row():
         with gr.Column():
             merge_to_video_checkbox = gr.Checkbox(label="Merge to Video", show_label=True, value=False)
     with gr.Row():
         with gr.Column():
-            use_trim_checkbox = gr.Checkbox(label="Use Trim - Test first 30 seconds", show_label=True, value=True)
+            use_trim_checkbox = gr.Checkbox(label="Use Trim - Test first 30 seconds", show_label=True, value=False)
     with gr.Row():
         with gr.Column():
-            replace_list_text = gr.Textbox(label="Replace List", placeholder="foo=abc, bar=xyz")
+            replace_list_text = gr.Textbox(label="Replace List", placeholder="foo=abc|bar=xyz", info="Split by |")
         with gr.Column():
-            delete_list_text = gr.Textbox(label="Delete List", placeholder="foo, bar")
+            delete_list_text = gr.Textbox(label="Delete List", placeholder="foo|bar", info="Split by |")
     with gr.Row():
         generate_btn = gr.Button("Generate", variant="primary")
     use_exist_srt_radio.change(
