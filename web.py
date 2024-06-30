@@ -201,10 +201,10 @@ with gr.Blocks() as app:
             with gr.Column():
                 translation_srt_file = gr.File(label="Translated SRT File", type="filepath", file_types=[".srt"],
                                                interactive=False)
-        with gr.Row():
-            with gr.Column():
-                translation_prompt_text = gr.Textbox(label="Translation Prompt", lines=10, interactive=True,
-                                                     value=TRANSLATION_PROMPT)
+        with gr.Accordion(label="Translation Prompt", open=False):
+            translation_prompt_text = gr.Textbox(label="Translation Prompt", show_label=False, lines=10,
+                                                 interactive=True,
+                                                 value=TRANSLATION_PROMPT)
 
     with gr.Accordion(label="Generate Summarization", open=False, visible=True):
         with gr.Row():
@@ -224,10 +224,9 @@ with gr.Blocks() as app:
             with gr.Column():
                 summarization_txt_file = gr.File(label="Summarized TXT File", type="filepath", file_types=[".txt"],
                                                  interactive=False)
-        with gr.Row():
-            with gr.Column():
-                summarization_prompt_text = gr.Textbox(label="Summarization Prompt", lines=25, interactive=True,
-                                                       value=SUMMARIZATION_PROMPT)
+        with gr.Accordion(label="Summarization Prompt", open=False):
+            summarization_prompt_text = gr.Textbox(label="Summarization Prompt", show_label=False, lines=30,
+                                                   interactive=True, value=SUMMARIZATION_PROMPT)
 
     with gr.Row():
         with gr.Column():
