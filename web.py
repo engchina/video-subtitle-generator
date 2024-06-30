@@ -5,6 +5,7 @@ import gradio as gr
 import os
 
 from dotenv import load_dotenv, find_dotenv
+from gradio import Video
 from gradio.utils import NamedString
 
 from utils import whisper_utils, translation_utils, summarization_utils, ffmpeg_utils
@@ -40,7 +41,7 @@ def generate_srt(input_video, use_exist_srt, uploaded_srt, whisper_model, use_tr
 
     # Step 1: Prepare video
     trimmed_video = input_video
-    if use_trim and not use_exist_srt:
+    if use_trim:
         trimmed_video = f"/tmp/trimmed_{video_uuid}.mp4"
         ffmpeg_utils.trim_video(input_video, trimmed_video, duration=30)
 
@@ -97,6 +98,23 @@ def summarize(uploaded_srt, summarization_txt,
     return gr.File(value=summarized_txt)
 
 
+def generate_video(output, uploaded_srt, use_translation, translated_srt,
+                   font_size=18, margin_v=4, merge_to_video=False):
+    video_uuid = uuid.uuid4()
+    if not use_translation:
+        translated_srt = uploaded_srt
+    # Step 5: Add subtitles to video using FFmpeg
+    if merge_to_video:
+        if isinstance(uploaded_srt, NamedString):
+            translated_srt = translated_srt.name
+        generated_output_video = f"/tmp/output_{video_uuid}.mp4"
+        ffmpeg_utils.add_subtitles_to_video(output, translated_srt, generated_output_video, font_size, margin_v)
+    else:
+        generated_output_video = output
+    print(f"Video with subtitles generated: {generated_output_video}")
+    return gr.Video(value=generated_output_video)
+
+
 TRANSLATION_PROMPT = """You are a translation expert, particularly skilled at translating {source_lang} into idiomatic {target_lang} expressions. I will provide a statement in {source_lang}, and you should directly output the corresponding idiomatic {target_lang} translation.
 There is no need to output any other unrelated language.
 
@@ -147,24 +165,6 @@ Please take the raw meeting notes I provide and transform them into a profession
 
 **Summarization**:\n
 """
-
-
-def generate_video(output, uploaded_srt, use_translation, translated_srt,
-                   font_size=18, margin_v=4, merge_to_video=False):
-    video_uuid = uuid.uuid4()
-    if not use_translation:
-        translated_srt = uploaded_srt
-    # Step 5: Add subtitles to video using FFmpeg
-    if merge_to_video:
-        if isinstance(uploaded_srt, NamedString):
-            translated_srt = translated_srt.name
-        generated_output_video = f"/tmp/output_{video_uuid}.mp4"
-        ffmpeg_utils.add_subtitles_to_video(output, translated_srt, output_video, font_size, margin_v)
-    else:
-        generated_output_video = output
-    print(f"Video with subtitles generated: {generated_output_video}")
-    return gr.Video(value=generated_output_video)
-
 
 with gr.Blocks() as app:
     gr.Markdown("# Generate Multilingual Subtitles for Video")
