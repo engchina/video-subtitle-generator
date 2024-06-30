@@ -203,7 +203,7 @@ with gr.Blocks() as app:
                                                interactive=False)
         with gr.Row():
             with gr.Column():
-                translation_prompt_text = gr.Textbox(label="Translation Prompt", lines=5, interactive=True,
+                translation_prompt_text = gr.Textbox(label="Translation Prompt", lines=10, interactive=True,
                                                      value=TRANSLATION_PROMPT)
 
     with gr.Accordion(label="Generate Summarization", open=False, visible=True):
@@ -226,7 +226,7 @@ with gr.Blocks() as app:
                                                  interactive=False)
         with gr.Row():
             with gr.Column():
-                summarization_prompt_text = gr.Textbox(label="Summarization Prompt", lines=5, interactive=True,
+                summarization_prompt_text = gr.Textbox(label="Summarization Prompt", lines=25, interactive=True,
                                                        value=SUMMARIZATION_PROMPT)
 
     with gr.Row():
